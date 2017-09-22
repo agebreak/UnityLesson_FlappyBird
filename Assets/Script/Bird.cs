@@ -6,8 +6,11 @@ public class Bird : MonoBehaviour
 {
     public float jumpForce = 5.0f;
     public Vector3 lookRotation;
-    public GameObject imageBird;    
-
+    public GameObject imageBird;
+    public GameObject camera;
+    public Vector3 shakeAmount;
+    public float shakeTime;
+    
     // Use this for initialization
     void Start()
     {
@@ -18,7 +21,7 @@ public class Bird : MonoBehaviour
     void Update()
     {       
 
-        // 마우스 왼쪽 버튼이 클릭되고, y값이 5보다 작을때면
+        // 마우스 왼쪽 버튼이 클릭되고, y값이 5보다 작을때면 점프
         if (Input.GetMouseButtonDown(0) && transform.position.y < 1.3f)
         {
             // 속도를 리셋한다
@@ -26,6 +29,8 @@ public class Bird : MonoBehaviour
 
             // 위로 힘을 가한다. 
             GetComponent<Rigidbody>().AddForce(0, jumpForce, 0, ForceMode.VelocityChange);
+
+            GetComponent<AudioSource>().Play();
         }
 
         // 움직일때 새의 방향을 조정한다(연출)
@@ -44,6 +49,8 @@ public class Bird : MonoBehaviour
             GetComponent<Rigidbody>().velocity = new Vector3(0, -3, 0);
             lookRotation = new Vector3(0, 0, -90);
             GameManager.instance.GameOver();
+
+            iTween.ShakePosition(camera, shakeAmount, shakeTime);
         }
         else if(other.tag == "Goal") // 중간을 통과했을때
         {
